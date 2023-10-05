@@ -75,10 +75,10 @@ ACTION swap::refund(name owner, uint64_t pair_id) {
     auto p_itr = _pairs.require_find(pair_id, "pair does not exist");
 
     if (itr->quantity0.amount > 0) {
-        transfer_to(p_itr->token0.get_contract(), owner, itr->quantity0, std::string("Totoro cancel refund"));
+        transfer_to(p_itr->token0.get_contract(), owner, itr->quantity0, std::string("WakaPools cancel refund"));
     }
     if (itr->quantity1.amount > 0) {
-        transfer_to(p_itr->token1.get_contract(), owner, itr->quantity1, std::string("Totoro cancel refund"));
+        transfer_to(p_itr->token1.get_contract(), owner, itr->quantity1, std::string("WakaPools cancel refund"));
     }
     deposits.erase(itr);
 }
@@ -153,7 +153,7 @@ void swap::handle_swap(std::vector<uint64_t> ids, name from, name contract, asse
     double amount_out_f = to_asset.quantity.amount * 1.0  / pow(10, to_asset.quantity.symbol.precision());
     double price_f = amount_out_f / amount_in_f;
     string memo = string_format(
-        string("Totoro swap from %s to %s with price %.8lf"), 
+        string("WakaPools swap from %s to %s with price %.8lf"), 
         quantity.symbol.code().to_string().c_str(), 
         to_asset.quantity.symbol.code().to_string().c_str(),
         price_f
@@ -182,8 +182,8 @@ void swap::remove_liquidity(name owner, uint64_t pair_id, uint64_t amount) {
         a.total_liquidity = safe_sub(a.total_liquidity, amount);
     });
 
-    transfer_to(p_itr->token0.get_contract(), owner, asset(amount0, p_itr->token0.get_symbol()), string("Totoro remove liquidity"));
-    transfer_to(p_itr->token1.get_contract(), owner, asset(amount1, p_itr->token1.get_symbol()), string("Totoro remove liquidity"));
+    transfer_to(p_itr->token0.get_contract(), owner, asset(amount0, p_itr->token0.get_symbol()), string("WakaPools remove liquidity"));
+    transfer_to(p_itr->token1.get_contract(), owner, asset(amount1, p_itr->token1.get_symbol()), string("WakaPools remove liquidity"));
 
     uint64_t balance0 = safe_sub(reserve0, amount0);
     uint64_t balance1 = safe_sub(reserve1, amount1);
@@ -272,10 +272,10 @@ void swap::addliquidity(name owner, uint64_t pair_id) {
 
     // refund
     if (amount0_refund > 0) {
-        transfer_to(p_itr->token0.get_contract(), owner, asset(amount0_refund, p_itr->token0.get_symbol()), string("Totoro deposit refund"));
+        transfer_to(p_itr->token0.get_contract(), owner, asset(amount0_refund, p_itr->token0.get_symbol()), string("WakaPools deposit refund"));
     }
     if (amount1_refund > 0) {
-        transfer_to(p_itr->token1.get_contract(), owner, asset(amount1_refund, p_itr->token1.get_symbol()), string("Totoro deposit refund"));
+        transfer_to(p_itr->token1.get_contract(), owner, asset(amount1_refund, p_itr->token1.get_symbol()), string("WakaPools deposit refund"));
     }
 
     // issue lp tokens
@@ -305,7 +305,7 @@ extended_asset swap::swap_token(uint64_t pair_id, name from, name contract, asse
     check(trade_fee + protocol_fee > 0, "swap amount too small");
     if (protocol_fee > 0) {
         amount_in -= protocol_fee;
-        transfer_to(contract, get_account("fee.account"), asset(protocol_fee, quantity.symbol), string("Totoro swap protocol fee"));
+        transfer_to(contract, get_account("fee.account"), asset(protocol_fee, quantity.symbol), string("WakaPools swap protocol fee"));
     }
     
     uint64_t reserve0 = p_itr->reserve0.amount;

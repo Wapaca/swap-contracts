@@ -39,7 +39,7 @@ ACTION swap::createpair(name creator, extended_symbol token0, extended_symbol to
 
     // create log
     auto logdata = std::make_tuple(pair_id, creator, token0, token1);
-    action(permission_level{_self, "active"_n}, LOG_CONTRACT, "createpair"_n, logdata).send();
+    action(permission_level{_self, "active"_n}, get_self(), "crtepairlog"_n, logdata).send();
 
     // create symbol
     auto max_supply = asset(1000000000000000000, sym);
@@ -193,7 +193,7 @@ void swap::remove_liquidity(name owner, uint64_t pair_id, uint64_t amount) {
     auto quantity0 = asset(amount0, p_itr->token0.get_symbol());
     auto quantity1 = asset(amount1, p_itr->token1.get_symbol());
     auto data = std::make_tuple(pair_id, owner, amount, quantity0, quantity1, p_itr->total_liquidity, p_itr->token0.get_contract(), p_itr->token1.get_contract(), p_itr->reserve0, p_itr->reserve1);
-    action(permission_level{_self, "active"_n}, LOG_CONTRACT, "rmliquidity"_n, data).send();
+    action(permission_level{_self, "active"_n}, get_self(), "rmliquidlog"_n, data).send();
 }
 
 void swap::handle_deposit(uint64_t pair_id, name owner, name contract, asset quantity) {
@@ -288,7 +288,7 @@ void swap::addliquidity(name owner, uint64_t pair_id) {
     auto quantity0 = asset(amount0, p_itr->token0.get_symbol());
     auto quantity1 = asset(amount1, p_itr->token1.get_symbol());
     auto data2 = std::make_tuple(pair_id, owner, liquidity, quantity0, quantity1, p_itr->total_liquidity, p_itr->token0.get_contract(), p_itr->token1.get_contract(), p_itr->reserve0, p_itr->reserve1);
-    action(permission_level{_self, "active"_n}, LOG_CONTRACT, "addliquidity"_n, data2).send();
+    action(permission_level{_self, "active"_n}, get_self(), "addliquidlog"_n, data2).send();
 
 } 
 
@@ -339,7 +339,7 @@ extended_asset swap::swap_token(uint64_t pair_id, name from, name contract, asse
     auto token_in = is_token0 ? p_itr->token0 : p_itr->token1;
     auto token_out = is_token0 ? p_itr->token1 : p_itr->token0;
     auto data = std::make_tuple(pair_id, from, token_in.get_contract(), quantity, token_out.get_contract(), output.quantity, asset(trade_fee + protocol_fee, quantity.symbol), trade_price, p_itr->total_liquidity, p_itr->reserve0, p_itr->reserve1);
-    action(permission_level{_self, "active"_n}, LOG_CONTRACT, "swap"_n, data).send();
+    action(permission_level{_self, "active"_n}, get_self(), "swaplog"_n, data).send();
 
     if (get_config("orac.status") == 1) {
         auto push_data = std::make_tuple(pair_id, reserve0, reserve1, balance0, balance1);

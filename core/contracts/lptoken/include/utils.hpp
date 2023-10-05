@@ -5,7 +5,7 @@
 using std::string;
 using namespace eosio;
 
-const name SWAP_CONTRACT = name("swap.ttr");
+const name SWAP_CONTRACT = name("tswap.we");
 const name LPNOTIFY_CONTRACT = name("lpnotify.ttr");
 
 struct liquidity_cost {

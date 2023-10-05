@@ -4,13 +4,28 @@
 class [[eosio::contract("swap")]] swap : public contract {
     public:
         using contract::contract;
-        static constexpr name LP_TOKEN_CONTRACT { name("lptoken.ttr") };
-        static constexpr name LOG_CONTRACT { name("logs.ttr") };
+        static constexpr name LP_TOKEN_CONTRACT { name("tlp.we") };
         static const uint64_t MINIMUM_LIQUIDITY = 10000;
 
         swap(name receiver, name code, datastream<const char *> ds): contract(receiver, code, ds),
             _pairs(_self, _self.value),
             _configs(_self, _self.value) {
+        }
+
+        [[eosio::action]] void crtepairlog(uint64_t pair_id, name creator, extended_symbol token0, extended_symbol token1) {
+            require_auth(get_self());
+        }
+
+        [[eosio::action]] void addliquidlog(uint64_t pair_id, name owner, uint64_t liquidity, asset quantity0, asset quantity1, uint64_t total_liquidity, name contract0, name contract1, asset reserve0, asset reserve1) {
+            require_auth(get_self());
+        }
+
+        [[eosio::action]] void rmliquidlog(uint64_t pair_id, name owner, uint64_t liquidity, asset quantity0, asset quantity1, uint64_t total_liquidity, name contract0, name contract1, asset reserve0, asset reserve1) {
+            require_auth(get_self());
+        }
+
+        [[eosio::action]] void swaplog(uint64_t pair_id, name owner, name contract_in, asset quantity_in, name contract_out, asset quantity_out, asset fee, double trade_price, uint64_t total_liquidity, asset reserve0, asset reserve1) {
+            require_auth(get_self());
         }
 
         [[eosio::action]] void setconfig(name key, uint64_t value);
@@ -85,7 +100,7 @@ class [[eosio::contract("swap")]] swap : public contract {
         name get_manager() {
             name manager = name(get_config("manager"));
             if (manager.value == 0) {
-                manager = name("admin.ttr");  // default manager
+                manager = name("we");  // default manager
             }
             return manager;
         }

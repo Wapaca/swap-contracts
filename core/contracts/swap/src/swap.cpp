@@ -2,7 +2,7 @@
 #include <eosio/system.hpp>
 
 ACTION swap::createpair(name creator, extended_symbol token0, extended_symbol token1) {
-    require_auth(creator);
+    require_auth(get_manager());
     check(get_config("status") == 1, "contract under maintenance");
     check(token0 != token1, "can not submit with same token");
     check(token0.get_contract() != LP_TOKEN_CONTRACT && token1.get_contract() != LP_TOKEN_CONTRACT, "can not create lp token pool now");
